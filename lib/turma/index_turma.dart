@@ -43,13 +43,35 @@ class _IndexTurmaState extends State<IndexTurma> {
 
   _body() {
     return Observer(builder: (context) {
-      if (_turmaBase.turmas != null && _turmaBase.turmas.length >= 0) {
-        return Container(
-          child: _listView(_turmaBase.turmas),
-        );
+      if (_turmaBase.responseManagment != null) {
+        var hasError = _turmaBase.responseManagment.hasError ?? false;
+        if (!hasError && _turmaBase.responseManagment.responseBody != null) {
+          return Container(
+            child: _listView(_turmaBase.responseManagment.responseBody),
+          );
+        } else if (_turmaBase.responseManagment.message != null) {
+          return Container(
+            child: Center(
+              child: Text(_turmaBase.responseManagment.message),
+            ),
+          );
+        }
       }
       return CircularProgress();
     });
+  }
+
+  void _showDialog() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+              title: Text("Erro"),
+              content: ListTile(
+                trailing: Icon(Icons.error),
+                title: Text(_turmaBase.responseManagment.message),
+              ));
+        });
   }
 
   /* _body() {

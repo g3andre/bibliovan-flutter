@@ -9,38 +9,22 @@ part of 'turma_base.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$TurmaBase on _TurmaBaseBase, Store {
-  final _$turmaAtom = Atom(name: '_TurmaBaseBase.turma');
+  final _$responseManagmentAtom =
+      Atom(name: '_TurmaBaseBase.responseManagment');
 
   @override
-  Turma get turma {
-    _$turmaAtom.context.enforceReadPolicy(_$turmaAtom);
-    _$turmaAtom.reportObserved();
-    return super.turma;
+  ResponseManagment<List<Turma>> get responseManagment {
+    _$responseManagmentAtom.context.enforceReadPolicy(_$responseManagmentAtom);
+    _$responseManagmentAtom.reportObserved();
+    return super.responseManagment;
   }
 
   @override
-  set turma(Turma value) {
-    _$turmaAtom.context.conditionallyRunInAction(() {
-      super.turma = value;
-      _$turmaAtom.reportChanged();
-    }, _$turmaAtom, name: '${_$turmaAtom.name}_set');
-  }
-
-  final _$turmasAtom = Atom(name: '_TurmaBaseBase.turmas');
-
-  @override
-  List<Turma> get turmas {
-    _$turmasAtom.context.enforceReadPolicy(_$turmasAtom);
-    _$turmasAtom.reportObserved();
-    return super.turmas;
-  }
-
-  @override
-  set turmas(List<Turma> value) {
-    _$turmasAtom.context.conditionallyRunInAction(() {
-      super.turmas = value;
-      _$turmasAtom.reportChanged();
-    }, _$turmasAtom, name: '${_$turmasAtom.name}_set');
+  set responseManagment(ResponseManagment<List<Turma>> value) {
+    _$responseManagmentAtom.context.conditionallyRunInAction(() {
+      super.responseManagment = value;
+      _$responseManagmentAtom.reportChanged();
+    }, _$responseManagmentAtom, name: '${_$responseManagmentAtom.name}_set');
   }
 
   final _$getTurmaListAsyncAction = AsyncAction('getTurmaList');
@@ -50,16 +34,9 @@ mixin _$TurmaBase on _TurmaBaseBase, Store {
     return _$getTurmaListAsyncAction.run(() => super.getTurmaList());
   }
 
-  final _$getTurmaByIdAsyncAction = AsyncAction('getTurmaById');
-
-  @override
-  Future getTurmaById(int id) {
-    return _$getTurmaByIdAsyncAction.run(() => super.getTurmaById(id));
-  }
-
   @override
   String toString() {
-    final string = 'turma: ${turma.toString()},turmas: ${turmas.toString()}';
+    final string = 'responseManagment: ${responseManagment.toString()}';
     return '{$string}';
   }
 }
