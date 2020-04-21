@@ -5,18 +5,21 @@ import 'package:bibliovan/assunto/assunto.dart';
 import 'package:bibliovan/autor/autor.dart';
 
 class Acervo {
-  final int id;
-  final String titulo;
-  final String isbn;
-  final List<Assunto> assunto;
-  final List<Autor> autor;
+  int id;
+  String titulo;
+  String isbn;
+  List<Assunto> assunto;
+  List<Autor> autor;
   Acervo({
     this.id,
     this.titulo,
     this.isbn,
     this.assunto,
     this.autor,
-  });
+  }) {
+    if (this.assunto == null) this.assunto = List<Assunto>();
+    if (this.autor == null) this.autor = List<Autor>();
+  }
 
   Acervo copyWith({
     int id,
