@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:bibliovan/turma/turma.dart';
-import 'package:bibliovan/turma/turma_api.dart';
 import 'package:http/http.dart' as http;
 import 'package:bibliovan/usuario/usuario.dart';
 import 'package:bibliovan/utils/api_utils.dart';
