@@ -65,7 +65,7 @@ class FormUsuario extends StatelessWidget {
                 icon: Icons.phone,
                 onChanged: (value) => _usuario.contato = value,
               ),
-              Button("Salvar", _onPressed)
+              Button(label: "Salvar", onPressed: _onPressed)
             ],
           ),
         ),

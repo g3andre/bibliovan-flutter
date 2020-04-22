@@ -1,10 +1,12 @@
+import 'package:bibliovan/widgets/circular_progress.dart';
 import 'package:flutter/material.dart';
 
 class Button extends StatelessWidget {
-  void Function() _onPressed;
-  String _label;
+  void Function() onPressed;
+  String label;
+  bool isBusy;
 
-  Button(this._label, this._onPressed);
+  Button({this.label, this.onPressed, this.isBusy = false});
 
   @override
   Widget build(BuildContext context) {
@@ -13,11 +15,13 @@ class Button extends StatelessWidget {
       width: MediaQuery.of(context).size.width,
       height: 45,
       child: RaisedButton(
-        onPressed: this._onPressed,
-        child: Text(
-          this._label,
-          style: TextStyle(color: Colors.white, fontSize: 17),
-        ),
+        onPressed: isBusy ? null : this.onPressed,
+        child: isBusy
+            ? CircularProgress()
+            : Text(
+                this.label,
+                style: TextStyle(color: Colors.white, fontSize: 17),
+              ),
         color: Colors.blue,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       ),

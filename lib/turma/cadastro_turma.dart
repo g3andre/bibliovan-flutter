@@ -52,7 +52,7 @@ class CadastroTurma extends StatelessWidget {
                 validator: _validator,
                 onChanged: (value) => this._turma.professor = value,
               ),
-              Button("Adicionar", _add),
+              Button(label: "Adicionar", onPressed: _add),
             ],
           ),
         ));
