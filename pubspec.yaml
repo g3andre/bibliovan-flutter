@@ -26,6 +26,7 @@ dependencies:
   http:
   mobx:
   flutter_mobx:
+  font_awesome_flutter:
 
 dev_dependencies:
   flutter_test:
