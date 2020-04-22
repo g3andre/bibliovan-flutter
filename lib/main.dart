@@ -1,6 +1,8 @@
+import 'package:bibliovan/acervo/index_acervo.dart';
 import 'package:bibliovan/turma/index_turma.dart';
 import 'package:bibliovan/utils/route_manager.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 void main() => runApp(MyApp());
 
@@ -43,9 +45,10 @@ class Home extends StatelessWidget {
               child: Column(
                 children: <Widget>[
                   ListTile(
+                    onTap: _viewAcervo,
                     leading: Icon(Icons.library_books),
-                    title: Text("Empréstimos"),
-                    subtitle: Text("Gerenciar livros emprestados"),
+                    title: Text("Acervo"),
+                    subtitle: Text("Gerenciar lo Acervo"),
                     trailing: Icon(Icons.arrow_forward),
                   ),
                   ListTile(
@@ -74,16 +77,20 @@ class Home extends StatelessWidget {
         itemCount: items.length,
         itemBuilder: (context, index) {
           return Card(
-            child: ListTile(
-              leading: Icon(Icons.book),
-              title: Text(items[index]),
-            ),
-          );
+              child: ListTile(
+            leading: Icon(Icons.book),
+            title: Text(items[index]),
+          ));
         });
   }
 
   _viewturmas() {
     Navigator.pop(this._buildContext);
     RouteManager.push(this._buildContext, IndexTurma());
+  }
+
+  void _viewAcervo() {
+    Navigator.pop(this._buildContext);
+    RouteManager.push(this._buildContext, IndexAcervo());
   }
 }
