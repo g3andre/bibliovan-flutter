@@ -1,12 +1,16 @@
+import 'package:bibliovan/usuario/api_usuario.dart';
 import 'package:bibliovan/usuario/form_usuario.dart';
 import 'package:bibliovan/usuario/usuario_base.dart';
+import 'package:bibliovan/utils/response_managment.dart';
 import 'package:bibliovan/utils/route_manager.dart';
 import 'package:bibliovan/widgets/circular_progress.dart';
+import 'package:bibliovan/widgets/dialog.dart';
 import 'package:flutter/material.dart';
 
 import 'package:bibliovan/turma/turma.dart';
 import 'package:bibliovan/usuario/usuario.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class IndexUsuario extends StatefulWidget {
   Turma _turma;
@@ -43,7 +47,9 @@ class _IndexUsuarioState extends State<IndexUsuario> {
       ),
       body: Container(
         padding: EdgeInsets.all(8),
-        child: _listUsuario(),
+        child: RefreshIndicator(
+            child: _listUsuario(),
+            onRefresh: () => _usuarioBase.updateListUsuario(widget._turma)),
       ),
       floatingActionButton: FloatingActionButton(
           child: Icon(Icons.add),
@@ -78,20 +84,106 @@ class _IndexUsuarioState extends State<IndexUsuario> {
         itemBuilder: (BuildContext context, int index) {
           return GestureDetector(
             onTap: () => _selectUsuario(usuarios[index]),
-            child: Card(
-              child: Center(
-                child: Row(
-                  children: <Widget>[
-                    usuarios[index].urlFoto != null
-                        ? Image.network(
-                            usuarios[index].urlFoto,
-                            scale: 5,
-                          )
-                        : Image.asset("assets/images/user.png"),
-                    Text(usuarios[index].nome)
-                  ],
+            child: Dismissible(
+              child: Card(
+                child: Center(
+                  child: Row(
+                    children: <Widget>[
+                      usuarios[index].urlFoto != null
+                          ? Image.network(
+                              usuarios[index].urlFoto,
+                              scale: 5,
+                            )
+                          : Image.asset("assets/images/user.png"),
+                      Text(usuarios[index].nome)
+                    ],
+                  ),
                 ),
               ),
+              key: Key(usuarios[index].nome),
+              background: Container(
+                color: Colors.red,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    SizedBox(width: 20),
+                    Icon(
+                      FontAwesomeIcons.trash,
+                      color: Colors.white,
+                    ),
+                    SizedBox(width: 10),
+                    Text(
+                      "Excluir",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ],
+                ),
+                alignment: Alignment.centerLeft,
+              ),
+              secondaryBackground: Container(
+                color: Colors.amberAccent,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: <Widget>[
+                    Icon(
+                      FontAwesomeIcons.edit,
+                      color: Colors.white,
+                    ),
+                    SizedBox(width: 10),
+                    Text(
+                      "Editar",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                    SizedBox(width: 20)
+                  ],
+                ),
+                alignment: Alignment.centerLeft,
+              ),
+              confirmDismiss: (DismissDirection direction) async {
+                if (direction == DismissDirection.endToStart) {
+                  RouteManager.push(context, FormUsuario(usuarios[index]));
+                } else if (direction == DismissDirection.startToEnd) {
+                  bool resp = await showDialog(
+                      context: context,
+                      builder: (context) {
+                        return OkCancelDialog(
+                          title: "Excluir",
+                          message: "Deseja excluir o Usuário?",
+                          onTapCancel: () => Navigator.of(context).pop(false),
+                          onTapOk: () async {
+                            final ResponseManagment respMan =
+                                await ApiUsuario.delete(usuarios[index].id);
+                            bool opt;
+                            if (respMan.hasError) {
+                              await showDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (_) {
+                                  return InformationDialog(
+                                    title: "Falha ao excluir",
+                                    message: respMan.message,
+                                  );
+                                },
+                              );
+                              opt = false;
+                            } else {
+                              opt = true;
+                            }
+                            Navigator.of(context).pop(opt);
+                          },
+                        );
+                      });
+                  return resp;
+                }
+              },
             ),
           );
         });

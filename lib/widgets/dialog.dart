@@ -32,7 +32,13 @@ class InformationDialog extends StatelessWidget {
     return AlertDialog(
       title: Text(title),
       content: Text(message),
-      actions: <Widget>[FlatButton(onPressed: () {}, child: Text("Ok"))],
+      actions: <Widget>[
+        FlatButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: Text("Ok"))
+      ],
     );
   }
 }

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:bibliovan/turma/turma.dart';
+import 'package:bibliovan/utils/response_managment.dart';
 import 'package:http/http.dart' as http;
 import 'package:bibliovan/usuario/usuario.dart';
 import 'package:bibliovan/utils/api_utils.dart';
@@ -46,16 +47,26 @@ class ApiUsuario {
     }
   }
 
-  static Future<Usuario> save(Usuario u) async {
-    var response = await http.post(_URL_ENDPOINT,
-        body: u.toJson(), headers: Headers.APPLICATION_JSON);
+  static Future<ResponseManagment<Usuario>> save(Usuario u) async {
+    ResponseManagment<Usuario> resp;
+    try {
+      var response = await http.post(_URL_ENDPOINT,
+          body: u.toJson(), headers: Headers.APPLICATION_JSON);
 
-    if (response.statusCode == StatusCode.CREATED) {
-      u = Usuario.fromMap(json.decode(response.body));
-      return u;
+      if (response.statusCode == StatusCode.CREATED) {
+        u = Usuario.fromMap(json.decode(response.body));
+        resp = ResponseManagment(hasError: false, message: "", responseBody: u);
+      } else {
+        resp = ResponseManagment(
+            hasError: true,
+            message:
+                "Falha ao tentar salvar os dados. \nHttpStatus: ${response.statusCode}");
+      }
+    } catch (error, exception) {
+      resp = ResponseManagment(
+          hasError: true, message: "Um erro aconteceu... \n$error");
     }
-
-    return null;
+    return resp;
   }
 
   static Future<Usuario> getUsuarioById(int id) async {
@@ -77,5 +88,31 @@ class ApiUsuario {
       print(
           "ERROR >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> \n$error \n$exception");
     }
+  }
+
+  static Future<ResponseManagment<void>> delete(int id) async {
+    if (id < 0) return null;
+
+    ResponseManagment resp = ResponseManagment();
+
+    try {
+      String url = "$_URL_ENDPOINT/$id";
+      var response = await http.delete(url);
+
+      if (response.statusCode == StatusCode.NO_CONTENT) {
+        resp =
+            ResponseManagment(hasError: false, message: "", responseBody: null);
+      } else {
+        resp = ResponseManagment(
+            hasError: true,
+            message:
+                "Erro ao tentar excluir o registro: \nHttpStatus ${response.statusCode}");
+      }
+    } catch (error, exception) {
+      resp = ResponseManagment(
+          hasError: true, message: "Uma exceção aconteceu...\n$error");
+    }
+
+    return resp;
   }
 }

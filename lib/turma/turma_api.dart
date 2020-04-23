@@ -30,6 +30,26 @@ class TurmaApi {
     return responseManagment;
   }
 
+  static Future<ResponseManagment> delete(int id) async {
+    ResponseManagment responseManagment = ResponseManagment();
+    try {
+      var response = await http.delete("${TurmaApi.END_POINT}/$id");
+      if (response.statusCode == StatusCode.NO_CONTENT) {
+        responseManagment.hasError = false;
+        responseManagment.responseBody = null;
+      } else {
+        responseManagment.hasError = true;
+        responseManagment.message =
+            "Não foi possivel efetuar a resquisição: ${response.statusCode}";
+      }
+    } catch (error, exception) {
+      print(">>>>Erro: $error \t Exception: $exception");
+      responseManagment.hasError = true;
+      responseManagment.message = "Erro: $error";
+    }
+    return responseManagment;
+  }
+
   static Future<Turma> saveTurma(Turma t) async {
     if (t.id == null) t.id = 0;
 

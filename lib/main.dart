@@ -2,7 +2,6 @@ import 'package:bibliovan/acervo/index_acervo.dart';
 import 'package:bibliovan/turma/index_turma.dart';
 import 'package:bibliovan/utils/route_manager.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 
 void main() => runApp(MyApp());
 

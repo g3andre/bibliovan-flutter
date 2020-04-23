@@ -6,7 +6,19 @@ import 'package:flutter/material.dart';
 class CadastroTurma extends StatelessWidget {
   BuildContext _context;
   final _formState = GlobalKey<FormState>();
-  final Turma _turma = Turma();
+  final _nomeEdt = TextEditingController();
+  final _descricaoEdt = TextEditingController();
+  final _professorEdt = TextEditingController();
+  Turma turma;
+
+  CadastroTurma({this.turma}) {
+    if (this.turma == null) {
+      this.turma = Turma();
+    } else {
+      this._loadForm();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     this._context = context;
@@ -26,31 +38,34 @@ class CadastroTurma extends StatelessWidget {
           child: Column(
             children: <Widget>[
               TextFormField(
+                controller: _nomeEdt,
                 decoration: InputDecoration(
                   icon: Icon(Icons.home),
                   labelText: "Nome",
                   hintText: "Nome da Turma",
                 ),
                 validator: _validator,
-                onChanged: (value) => this._turma.nome = value,
+                onChanged: (value) => this.turma.nome = value,
               ),
               TextFormField(
+                controller: _descricaoEdt,
                 decoration: InputDecoration(
                   icon: Icon(Icons.list),
                   labelText: "Descrição",
                   hintText: "Descrição da Turma",
                 ),
                 validator: _validator,
-                onChanged: (value) => this._turma.descricao = value,
+                onChanged: (value) => this.turma.descricao = value,
               ),
               TextFormField(
+                controller: _professorEdt,
                 decoration: InputDecoration(
                   icon: Icon(Icons.person),
                   labelText: "Professor",
                   hintText: "Professor da turma",
                 ),
                 validator: _validator,
-                onChanged: (value) => this._turma.professor = value,
+                onChanged: (value) => this.turma.professor = value,
               ),
               Button(label: "Adicionar", onPressed: _add),
             ],
@@ -71,10 +86,18 @@ class CadastroTurma extends StatelessWidget {
 
   void _add() async {
     if (_formState.currentState.validate()) {
-      final saved = await TurmaApi.saveTurma(this._turma);
+      final saved = await TurmaApi.saveTurma(this.turma);
       if (saved != null) {
         Navigator.pop(_context, true);
       }
+    }
+  }
+
+  void _loadForm() {
+    if (this.turma != null) {
+      this._nomeEdt.text = this.turma.nome;
+      this._descricaoEdt.text = this.turma.descricao;
+      this._professorEdt.text = this.turma.professor;
     }
   }
 }

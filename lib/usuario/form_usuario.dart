@@ -1,11 +1,16 @@
+import 'package:bibliovan/usuario/api_usuario.dart';
 import 'package:bibliovan/usuario/usuario.dart';
+import 'package:bibliovan/utils/response_managment.dart';
 import 'package:bibliovan/widgets/button.dart';
+import 'package:bibliovan/widgets/dialog.dart';
 import 'package:flutter/material.dart';
 
 class FormUsuario extends StatelessWidget {
   final Usuario _usuario;
+  final _formKey = GlobalKey<FormState>();
   final _txtNome = TextEditingController();
   final _txtContato = TextEditingController();
+  BuildContext _context;
 
   FormUsuario(this._usuario) {
     if (this._usuario != null) {
@@ -16,6 +21,7 @@ class FormUsuario extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    this._context = context;
     return Scaffold(
       appBar: AppBar(
         title: Text("Usuario"),
@@ -30,6 +36,7 @@ class FormUsuario extends StatelessWidget {
       padding: EdgeInsets.all(18),
       child: SingleChildScrollView(
         child: Form(
+          key: _formKey,
           child: Column(
             children: <Widget>[
               Stack(
@@ -90,5 +97,25 @@ class FormUsuario extends StatelessWidget {
     );
   }
 
-  void _onPressed() {}
+  void _onPressed() async {
+    if (_formKey.currentState.validate()) {
+      ResponseManagment<Usuario> res = await ApiUsuario.save(this._usuario);
+      if (res.hasError) {
+        _showDialog(InformationDialog(
+          title: "Erro",
+          message: res.message,
+        ));
+      }
+    }
+  }
+
+  _showDialog(Widget widget) {
+    return showDialog(
+      context: this._context,
+      barrierDismissible: false,
+      builder: (_) {
+        return widget;
+      },
+    );
+  }
 }
